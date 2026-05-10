@@ -3,14 +3,14 @@ import type { Movie } from "../../types/movie";
 import { createPortal } from "react-dom";
 import css from "./MovieModal.module.css";
 
-const modalRoot = document.getElementById("modal-root") as HTMLElement;
-
 interface MovieModalProps {
   movie: Movie;
   onClose: () => void;
 }
 
 export default function MovieModal({ movie, onClose }: MovieModalProps) {
+  const modalRoot = document.getElementById("modal-root");
+
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -26,6 +26,8 @@ export default function MovieModal({ movie, onClose }: MovieModalProps) {
       document.body.style.overflow = "auto";
     };
   }, [onClose]);
+
+  if (!modalRoot) return null;
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -58,11 +60,9 @@ export default function MovieModal({ movie, onClose }: MovieModalProps) {
         <div className={css.content}>
           <h2>{movie.title}</h2>
           <p>{movie.overview}</p>
-
           <p>
             <strong>Release Date:</strong> {movie.release_date}
           </p>
-
           <p>
             <strong>Rating:</strong> {movie.vote_average}/10
           </p>
