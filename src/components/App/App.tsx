@@ -11,8 +11,17 @@ import MovieModal from "../MovieModal/MovieModal";
 import { fetchMovies } from "../../services/movieService";
 import type { Movie } from "../../types/movie";
 
-import ReactPaginate from "react-paginate";
+import ReactPaginateModule from "react-paginate";
+import type { ReactPaginateProps } from "react-paginate";
+import type { ComponentType } from "react";
 import css from "./App.module.css";
+
+type ModuleWithDefault<T> = { default: T };
+const ReactPaginate = (
+  ReactPaginateModule as unknown as ModuleWithDefault<
+    ComponentType<ReactPaginateProps>
+  >
+).default;
 
 export default function App() {
   const [query, setQuery] = useState("");
@@ -41,7 +50,6 @@ export default function App() {
         {isError && <ErrorMessage />}
         {data && data.results.length > 0 && (
           <>
-            <MovieGrid movies={data.results} onSelect={handleSelectMovie} />
             {data.total_pages > 1 && (
               <ReactPaginate
                 pageCount={data.total_pages}
@@ -55,6 +63,7 @@ export default function App() {
                 previousLabel="←"
               />
             )}
+            <MovieGrid movies={data.results} onSelect={handleSelectMovie} />
           </>
         )}
         {selectedMovie && (
